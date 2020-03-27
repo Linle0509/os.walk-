@@ -1,0 +1,60 @@
+'''
+os.walk(top[, topdown=True[, onerror=None[, followlinks=False]]])
+top -- 是你所要遍历的目录的地址, 返回的是一个三元组(root,dirs,files)。
+root 所指的是当前正在遍历的这个文件夹的本身的地址
+dirs 是一个 list ，内容是该文件夹中所有的目录的名字(不包括子目录)
+files 同样是 list , 内容是该文件夹中所有的文件(不包括子目录)
+topdown --可选，为 True，则优先遍历 top 目录，否则优先遍历 top 的子目录(默认为开启)。如果 topdown 参数为 True，walk 会遍历top文件夹，与top 文件夹中每一个子目录。
+onerror -- 可选，需要一个 callable 对象，当 walk 需要异常时，会调用。
+followlinks -- 可选，如果为 True，则会遍历目录下的快捷方式(linux 下是软连接 symbolic link )实际所指的目录(默认关闭)，如果为 False，则优先遍历 top 的子目录
+'''
+
+mport os
+folder_path = r'E:\Downloads'
+for parent, dirs, files in os.walk(folder_path):
+    # 输出文件夹信息
+    for dir in dirs:
+        print('parent is :', parent)
+        print('dirname is ', dir)
+    # 输出文件信息
+    for file in files:
+        print('parent is :', parent)
+        print('filename is :', file)
+        # 文件的完整路径
+        fullname = os.path.join(parent, file)
+        print('the fulll name of the file is :', fullname)
+        file_size = os.path.getsize(fullname)/1024/1024
+        print('the file size is : %.2f MB' % file_size)
+        
+#上面的例子中，第一个for循环是遍历文件夹的，我们只要文件，也就是只要第二个for循环，把其中每一项加起来
+------------------------------------------------------------------------------------------------ 
+# 获取文件夹的大小
+import os
+folder_path = r'E:\Downloads'
+full_size = 0
+for parent, dirs, files in os.walk(folder_path):
+    for file in files:
+        fullname = os.path.join(parent, file)
+        file_size = os.path.getsize(fullname)
+        full_size += file_size
+print(full_size, "%.2f MB" % (full_size/1024/1024))
+
+#把里层的for循环写成迭代器，再用sum来替代 full_size += file_size :
+------------------------------------------------------------------------------------------------
+import os
+folder_path = r'E:\Downloads'
+full_size = 0
+for parent, dirs, files in os.walk(folder_path):
+    full_size = sum(os.path.getsize(os.path.join(parent, file)) for file in files)
+print(full_size, "%.2f MB" % (full_size/1024/1024))
+------------------------------------------------------------------------------------------------
+#再把最外面的for循环也剥掉，就成了下面的一行代码了。
+#一行代码：
+full_size = sum(sum(os.path.getsize(os.path.join(parent, file)) for file in files) for parent, dirs, files in os.walk(folder_path))
+-------------------------------------------------------------------------------------------------
+#关于嵌套2层for循环的写法，上面用了括号。更简介的写法是把括号去掉，把外层的for写在前面：
+for i in a:
+    for j in i:
+        print(j)
+
+[j for i in a for j in i]
