@@ -9,7 +9,7 @@ onerror -- 可选，需要一个 callable 对象，当 walk 需要异常时，�
 followlinks -- 可选，如果为 True，则会遍历目录下的快捷方式(linux 下是软连接 symbolic link )实际所指的目录(默认关闭)，如果为 False，则优先遍历 top 的子目录
 '''
 
-mport os
+import os
 folder_path = r'E:\Downloads'
 for parent, dirs, files in os.walk(folder_path):
     # 输出文件夹信息
